@@ -59,4 +59,5 @@ Rank 44 : Vinland Saga
 
 - [x] Fetch anime names from the "MyAnimeList" website.
 - [x] Allow user input for anime name search.
-- [ ] Display the rank of the anime if found.
+- [x] Display the rank of the anime if found.
+- [x] Display the MAL rating of the anime.
