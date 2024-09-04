@@ -10,13 +10,13 @@ read -p "Enter the anime name: " anime_name
 
 arr=()
 
+i=0
 while [ "$LIMIT" -le "$MAX_LIMIT" ]; do
 	URL="https://myanimelist.net/topanime.php?limit=$LIMIT"
 	res=$(curl -s "$URL")
 	names=$(echo "$res" | sed -n 's/.*<a[^>]*class="hoverinfo_trigger"[^>]*>\([^<]*\)<\/a>.*/\1/p')
 	scores=$(echo "$res" | sed -n 's/.*on score-label[^"]*[^>]*>\([^<]*\)<\/span>.*/\1/p')
 
-	i=0
 	while IFS= read -r name && IFS= read -r score <&3; do
 		arr[i]="$name|$score"
 		((i++))
