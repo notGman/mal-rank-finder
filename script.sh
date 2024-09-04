@@ -14,15 +14,21 @@ while [ "$LIMIT" -le "$MAX_LIMIT" ]; do
 	URL="https://myanimelist.net/topanime.php?limit=$LIMIT"
 	res=$(curl -s "$URL")
 	names=$(echo "$res" | sed -n 's/.*<a[^>]*class="hoverinfo_trigger"[^>]*>\([^<]*\)<\/a>.*/\1/p')
-	while IFS= read -r i; do
-		arr+=("$i")
-	done <<< "$names"
+	scores=$(echo "$res" | sed -n 's/.*on score-label[^"]*[^>]*>\([^<]*\)<\/span>.*/\1/p')
+
+	i=0
+	while IFS= read -r name && IFS= read -r score <&3; do
+		arr[i]="$name|$score"
+		((i++))
+	done < <(echo "$names") 3< <(echo "$scores")
+
 	LIMIT=$((LIMIT+50))
 done
 
-for name in "${arr[@]}"; do
+for entry in "${arr[@]}"; do
+	IFS='|' read name score <<< "$entry"
 	if [[ "${name,,}" =~ "$anime_name" ]] || [[ "${name}" =~ "$anime_name" ]]; then
-		echo "Rank $RANK : $name"
+		echo "Rank $RANK : $name ; Rating : ${score}"
 		FOUND=$((FOUND+1))
 	fi
 	((RANK++))
